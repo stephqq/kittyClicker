@@ -178,3 +178,69 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   clip: rect(0 0 0);
   overflow: hidden;
 }
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.8rem;
+  font-family: "EB Garamond", serif;
+}
+
+.wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+header {
+  height: 10vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  font-family: "Pacifico", cursive;
+  font-size: 2.5rem;
+}
+
+header h1 {
+  position: relative;
+  bottom: -18px;
+}
+
+footer {
+  height: 10vh;
+  text-align: right;
+}
+
+.gameArea {
+  border: 1px solid black;
+  height: 80vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.gameArea img {
+  border-radius: 50%;
+}
