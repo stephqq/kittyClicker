@@ -196,7 +196,7 @@ html {
 }
 
 body {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   font-family: "EB Garamond", serif;
 }
 
@@ -219,12 +219,39 @@ header {
 
 header h1 {
   position: relative;
-  bottom: -18px;
+  bottom: -22px;
+}
+
+main {
+  position: relative;
+}
+
+main .startModal,
+main .endModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 90%;
+  text-align: center;
+  background: #ffffcc;
+}
+
+main .endModal {
+  display: none;
+}
+
+main .endModal .finalScore {
+  font-size: 7rem;
+  font-weight: 700;
 }
 
 footer {
   height: 10vh;
   text-align: right;
+  font-size: 1.6rem;
+  padding-top: 5px;
 }
 
 .gameArea {
@@ -239,8 +266,23 @@ footer {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  position: relative;
 }
 
-.gameArea img {
-  border-radius: 50%;
+.gameArea .score {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  display: none;
+}
+
+.gameArea .timer {
+  font-family: "Indie Flower", sans-serif;
+  position: absolute;
+  top: 0;
+  font-size: 20rem;
+  line-height: 1;
+  display: none;
 }

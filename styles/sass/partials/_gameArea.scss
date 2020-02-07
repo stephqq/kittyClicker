@@ -4,8 +4,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 
-    img {
-        border-radius: 50%;
+    .score {
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        display: none;
+    }
+
+    .timer {
+        font-family: $timerFont;
+        position: absolute;
+        top: 0;
+        font-size: 20rem;
+        line-height: 1;
+        display: none;
+        // MAKE THIS TRANSPARENT ONCE YOU CONFIRM ITS WORKING!!!
     }
 }

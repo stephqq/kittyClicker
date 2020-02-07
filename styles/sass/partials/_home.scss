@@ -7,11 +7,37 @@ header {
 
     h1 {
         position: relative;
-        bottom: -18px;
+        bottom: -22px;
+    }
+}
+
+main {
+    position: relative;
+
+    .startModal,
+    .endModal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        text-align: center;
+        background: $modalBackground;
+    }
+
+    .endModal {
+        display: none;
+
+        .finalScore {
+            font-size: 7rem;
+            font-weight: 700;
+        }
     }
 }
 
 footer {
     height: 10vh;
     text-align: right;
+    font-size: 1.6rem;
+    padding-top: 5px;
 }
