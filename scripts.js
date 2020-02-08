@@ -35,7 +35,7 @@ $(document).ready(function() {
         $score.show();
         // animate the kitty
         $kitty.addClass('animate');
-        $kittyContainer.addClass('animateClick');
+        //$kittyContainer.addClass('animateClick');
         // run the countdown timer 30s -> 0s
         const intervalTimer = setInterval(function() {
             timerCounter--;
@@ -61,6 +61,8 @@ $(document).ready(function() {
                 $endModal.show('slow');
                 // stop listening for clicks on the kitty
                 $kitty.off();
+                // stop listening for keydown on DOM
+                $(document).off();
                 clearInterval(intervalTimer);
             } else if (timerCounter < 10) {
                 $timer.text('00:0' + timerCounter);
@@ -69,7 +71,11 @@ $(document).ready(function() {
             }
         }, 1000);
         // listen for clicks on the kitty
-        $kitty.on('click', function() {
+        $kitty.on('click', kittyClicker);
+        // listen for keypress events on the DOM - accessibility feature
+        $(document).on('keyup', kittyClicker);
+
+        function kittyClicker() {
             // then update the score variable
             scoreCounter++;
             // then update the score element with the score, taking into account the design of '00000' appearance
@@ -84,6 +90,7 @@ $(document).ready(function() {
             } else {
                 $score.text(scoreCounter);
             }
-        });
-    }
+            $kittyContainer.toggleClass('animateClick');
+        } //end of kittyClicker function
+    } //end of runGame function
 });

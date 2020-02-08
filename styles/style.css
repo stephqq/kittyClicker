@@ -286,7 +286,6 @@ footer a {
   text-decoration: none;
   -webkit-transition: all .5s;
   transition: all .5s;
-  padding: 0 5px;
   border-radius: 10px;
 }
 
@@ -339,7 +338,7 @@ footer a:hover, footer a:focus {
           animation: kittyDance 5s infinite;
 }
 
-.gameArea .animateClick:active {
+.gameArea .animateClick {
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
   -webkit-transition: all 0.1s;
