@@ -274,6 +274,15 @@ main .endModal .finalScore {
   font-weight: 700;
 }
 
+main .instructions {
+  font-size: 1.6rem;
+  margin-top: 15px;
+}
+
+main .instructions span {
+  display: block;
+}
+
 footer {
   height: 10vh;
   text-align: right;

@@ -76,21 +76,30 @@ $(document).ready(function() {
         $(document).on('keyup', kittyClicker);
 
         function kittyClicker() {
-            // then update the score variable
-            scoreCounter++;
-            // then update the score element with the score, taking into account the design of '00000' appearance
-            if (scoreCounter < 10) {
-                $score.text('0000' + scoreCounter);
-            } else if (scoreCounter < 100) {
-                $score.text('000' + scoreCounter);
-            } else if (scoreCounter < 1000) {
-                $score.text('00' + scoreCounter);
-            } else if (scoreCounter < 10000) {
-                $score.text('0' + scoreCounter);
-            } else {
-                $score.text(scoreCounter);
+            if (event.type === 'click') {
+                iveBeenClicked();
+            } else if (event.keyCode === 32) {
+                iveBeenClicked();
             }
-            $kittyContainer.toggleClass('animateClick');
+
+            function iveBeenClicked() {
+                // then update the score variable
+                scoreCounter++;
+                // then update the score element with the score, taking into   account the design of '00000' appearance
+                if (scoreCounter < 10) {
+                    $score.text('0000' + scoreCounter);
+                } else if (scoreCounter < 100) {
+                    $score.text('000' + scoreCounter);
+                } else if (scoreCounter < 1000) {
+                    $score.text('00' + scoreCounter);
+                } else if (scoreCounter < 10000) {
+                    $score.text('0' + scoreCounter);
+                } else {
+                    $score.text(scoreCounter);
+                }
+                $kittyContainer.toggleClass('animateClick');
+            }
+
         } //end of kittyClicker function
     } //end of runGame function
 });

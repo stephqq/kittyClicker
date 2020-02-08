@@ -54,6 +54,15 @@ main {
             font-weight: 700;
         }
     }
+
+    .instructions {
+        font-size: 1.6rem;
+        margin-top: 15px;
+
+        span {
+            display: block;
+        }
+    }
 }
 
 footer {
