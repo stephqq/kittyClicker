@@ -64,7 +64,7 @@ $(document).ready(function() {
 
         // play the music
         music.loop = true;
-        music.fastSeek(0);
+        music.currentTime = 0;
         music.volume = 0.5;
         music.play();
 
