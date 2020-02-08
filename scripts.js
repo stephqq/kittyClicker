@@ -1,5 +1,8 @@
 // let's get our document ready!
 $(document).ready(function() {
+
+    // declare some global variables!
+    let scoreHistory = 0;
     
     // let's grab some elements on the page!
     const $start = $('.start');
@@ -11,6 +14,13 @@ $(document).ready(function() {
     const $score = $('.score');
     const $finalScore = $('.finalScore');
     const $replay = $('.tryAgain');
+    const $topScore = $('.topScore');
+
+    // let's check if we've played this game before and load the top score!
+    if (localStorage.length > 0) {
+        scoreHistory = localStorage.getItem('previousScore');
+        $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
+    }
 
     // game start!
     $start.on('click', runGame);
@@ -65,11 +75,25 @@ $(document).ready(function() {
                 } else {
                     $finalScore.text(scoreCounter);
                 }
+                //update localStorage if it's a new top score and update the DOM
+                if (localStorage.length === 0) {
+                    localStorage.setItem('previousScore', scoreCounter);
+                    scoreHistory = localStorage.getItem('previousScore');
+                    $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
+                } else if (localStorage.length === 1) {
+                    if (localStorage.getItem('previousScore') < scoreCounter) {
+                        localStorage.setItem('previousScore', scoreCounter);
+                        scoreHistory = localStorage.getItem('previousScore');
+                        $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
+                    }
+                }
+                //bring up the try again modal
                 $endModal.show('slow');
                 // stop listening for clicks on the kitty
                 $kitty.off();
                 // stop listening for keydown on DOM
                 $(document).off();
+                // turn off the timer
                 clearInterval(intervalTimer);
             } else if (timerCounter < 10) {
                 $timer.text('00:0' + timerCounter);

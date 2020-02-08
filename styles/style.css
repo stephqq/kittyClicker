@@ -270,7 +270,7 @@ main .instructions {
   margin-top: 15px;
 }
 
-main .instructions span {
+span {
   display: block;
 }
 
@@ -321,6 +321,17 @@ footer a:hover, footer a:focus {
   letter-spacing: 2px;
   font-weight: 700;
   display: none;
+}
+
+.gameArea .topScore {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  font-weight: 700;
+  background: #fcb3c4;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0 10px;
 }
 
 .gameArea .timer {
