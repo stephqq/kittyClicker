@@ -18,10 +18,10 @@ $(document).ready(function() {
     // game replay!
     $replay.on('click', runGame);
 
+    // run game function
     function runGame() {
         let scoreCounter = 0;
         let timerCounter = 30;
-
 
         // hide the start/end modal
         if ($startModal.css("display") == 'block') {
@@ -29,24 +29,31 @@ $(document).ready(function() {
         } else if ($endModal.css("display") == 'block') {
             $endModal.hide();
         }
+
         // show the countdown timer
         $timer.show();
+
         // show the score
         $score.show();
+
         // animate the kitty
         $kitty.addClass('animate');
-        //$kittyContainer.addClass('animateClick');
+
         // run the countdown timer 30s -> 0s
         const intervalTimer = setInterval(function() {
             timerCounter--;
-            // update the timer element & stop it
+            // update the timer element & stop it as well as everything else
             if (timerCounter == -1) {
+                //timer reset
                 $timer.hide();
                 $timer.text('00:30');
+                //score reset
                 $score.hide();
                 $score.text('00000');
+                //animations turn off
                 $kitty.removeClass('animate');
                 $kittyContainer.removeClass('animateClick');
+                //update the final score
                 if (scoreCounter < 10) {
                     $finalScore.text('0000' + scoreCounter);
                 } else if (scoreCounter < 100) {
@@ -70,22 +77,25 @@ $(document).ready(function() {
                 $timer.text('00:' + timerCounter);
             }
         }, 1000);
+
         // listen for clicks on the kitty
         $kitty.on('click', kittyClicker);
+
         // listen for keypress events on the DOM - accessibility feature
         $(document).on('keyup', kittyClicker);
 
+        // kitty clicker function tied to event listeners
         function kittyClicker() {
             if (event.type === 'click') {
                 iveBeenClicked();
             } else if (event.keyCode === 32) {
                 iveBeenClicked();
             }
-
+            // clicker functionality
             function iveBeenClicked() {
-                // then update the score variable
+                // update the score variable
                 scoreCounter++;
-                // then update the score element with the score, taking into   account the design of '00000' appearance
+                // update the score element with the score, taking into   account the design of '00000' appearance
                 if (scoreCounter < 10) {
                     $score.text('0000' + scoreCounter);
                 } else if (scoreCounter < 100) {
@@ -97,9 +107,10 @@ $(document).ready(function() {
                 } else {
                     $score.text(scoreCounter);
                 }
+                //animate on event
                 $kittyContainer.toggleClass('animateClick');
-            }
+            } //end of iveBeenClicked function
 
         } //end of kittyClicker function
     } //end of runGame function
-});
+}); //end of document ready
