@@ -25,6 +25,8 @@ html {
 body {
     font-size: 2.5rem;
     font-family: $bodyFont;
+    background: $bodyBackground;
+    // color: $secondary;
 }
 
 .wrapper {

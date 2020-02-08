@@ -198,6 +198,7 @@ html {
 body {
   font-size: 2.5rem;
   font-family: "EB Garamond", serif;
+  background: #fffae8;
 }
 
 .wrapper {
@@ -220,6 +221,7 @@ header {
 header h1 {
   position: relative;
   bottom: -22px;
+  z-index: 5;
 }
 
 main {
@@ -235,7 +237,32 @@ main .endModal {
           transform: translate(-50%, -50%);
   width: 90%;
   text-align: center;
-  background: #ffffcc;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 75px 0;
+  border-radius: 10px;
+}
+
+main .startModal button,
+main .endModal button {
+  background: #fcb3c4;
+  border: 5px solid transparent;
+  padding: 5px 25px;
+  border-radius: 25px;
+  margin-top: 25px;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+main .startModal button:hover, main .startModal button:focus,
+main .endModal button:hover,
+main .endModal button:focus {
+  border: 5px solid gray;
+}
+
+main .startModal button:active,
+main .endModal button:active {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
 }
 
 main .endModal {
@@ -254,8 +281,20 @@ footer {
   padding-top: 5px;
 }
 
+footer a {
+  color: black;
+  text-decoration: none;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+  padding: 0 5px;
+  border-radius: 10px;
+}
+
+footer a:hover, footer a:focus {
+  background: #fcb3c4;
+}
+
 .gameArea {
-  border: 1px solid black;
   height: 80vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -267,6 +306,13 @@ footer {
       -ms-flex-align: center;
           align-items: center;
   position: relative;
+  background: #fcecb3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gameArea img {
+  width: 300px;
 }
 
 .gameArea .score {
@@ -280,9 +326,60 @@ footer {
 
 .gameArea .timer {
   font-family: "Indie Flower", sans-serif;
+  color: rgba(0, 0, 0, 0.3);
   position: absolute;
   top: 0;
-  font-size: 20rem;
-  line-height: 1;
+  font-size: 13rem;
+  line-height: 1.2;
   display: none;
+}
+
+.gameArea .animate {
+  -webkit-animation: kittyDance 5s infinite;
+          animation: kittyDance 5s infinite;
+}
+
+.gameArea .animateClick:active {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+@-webkit-keyframes kittyDance {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  30% {
+    -webkit-transform: rotate(25deg);
+            transform: rotate(25deg);
+  }
+  60% {
+    -webkit-transform: rotate(-25deg);
+            transform: rotate(-25deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@keyframes kittyDance {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  30% {
+    -webkit-transform: rotate(25deg);
+            transform: rotate(25deg);
+  }
+  60% {
+    -webkit-transform: rotate(-25deg);
+            transform: rotate(-25deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
 }

@@ -1,9 +1,5 @@
 // let's get our document ready!
 $(document).ready(function() {
-
-    // let's declare some global variables!
-    let scoreCounter = 0;
-    let timerCounter = 30;
     
     // let's grab some elements on the page!
     const $start = $('.start');
@@ -11,24 +7,60 @@ $(document).ready(function() {
     const $endModal = $('.endModal');
     const $timer = $('.timer');
     const $kitty = $('img');
+    const $kittyContainer = $('.imgContainer');
     const $score = $('.score');
+    const $finalScore = $('.finalScore');
+    const $replay = $('.tryAgain');
 
     // game start!
-    $start.on('click', function() {
-        // hide the start modal
-        $startModal.hide();
+    $start.on('click', runGame);
+
+    // game replay!
+    $replay.on('click', runGame);
+
+    function runGame() {
+        let scoreCounter = 0;
+        let timerCounter = 30;
+
+
+        // hide the start/end modal
+        if ($startModal.css("display") == 'block') {
+            $startModal.hide();
+        } else if ($endModal.css("display") == 'block') {
+            $endModal.hide();
+        }
         // show the countdown timer
         $timer.show();
         // show the score
         $score.show();
+        // animate the kitty
+        $kitty.addClass('animate');
+        $kittyContainer.addClass('animateClick');
         // run the countdown timer 30s -> 0s
         const intervalTimer = setInterval(function() {
             timerCounter--;
             // update the timer element & stop it
             if (timerCounter == -1) {
                 $timer.hide();
+                $timer.text('00:30');
                 $score.hide();
-                $endModal.show();
+                $score.text('00000');
+                $kitty.removeClass('animate');
+                $kittyContainer.removeClass('animateClick');
+                if (scoreCounter < 10) {
+                    $finalScore.text('0000' + scoreCounter);
+                } else if (scoreCounter < 100) {
+                    $finalScore.text('000' + scoreCounter);
+                } else if (scoreCounter < 1000) {
+                    $finalScore.text('00' + scoreCounter);
+                } else if (scoreCounter < 10000) {
+                    $finalScore.text('0' + scoreCounter);
+                } else {
+                    $finalScore.text(scoreCounter);
+                }
+                $endModal.show('slow');
+                // stop listening for clicks on the kitty
+                $kitty.off();
                 clearInterval(intervalTimer);
             } else if (timerCounter < 10) {
                 $timer.text('00:0' + timerCounter);
@@ -53,7 +85,5 @@ $(document).ready(function() {
                 $score.text(scoreCounter);
             }
         });
-    });
-
-
+    }
 });

@@ -8,6 +8,7 @@ header {
     h1 {
         position: relative;
         bottom: -22px;
+        z-index: 5;
     }
 }
 
@@ -23,6 +24,26 @@ main {
         width: 90%;
         text-align: center;
         background: $modalBackground;
+        padding: 75px 0;
+        border-radius: 10px;
+
+        button {
+            background: $accent;
+            border: 5px solid transparent;
+            padding: 5px 25px;
+            border-radius: 25px;
+            margin-top: 25px;
+            transition: all .5s;
+
+            &:hover,
+            &:focus {
+                border: 5px solid $secondary;
+            }
+
+            &:active {
+                transform: scale(0.9);
+            }
+        }
     }
 
     .endModal {
@@ -40,4 +61,17 @@ footer {
     text-align: right;
     font-size: 1.6rem;
     padding-top: 5px;
+
+    a {
+        color: black;
+        text-decoration: none;
+        transition: all .5s;
+        padding: 0 5px;
+        border-radius: 10px;
+
+        &:hover,
+        &:focus {
+            background: $accent;
+        }
+    }
 }
