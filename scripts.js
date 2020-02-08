@@ -1,8 +1,13 @@
 // let's get our document ready!
 $(document).ready(function() {
 
-    // declare some global variables!
+    // declare global variables!
     let scoreHistory = 0;
+
+    // let's load the music!
+    const music = new Audio('./assets/game-music.wav');
+    const chime = new Audio('./assets/endOfGame.wav');
+    const clickAudio = new Audio('./assets/click.wav');
     
     // let's grab some elements on the page!
     const $start = $('.start');
@@ -15,12 +20,20 @@ $(document).ready(function() {
     const $finalScore = $('.finalScore');
     const $replay = $('.tryAgain');
     const $topScore = $('.topScore');
+    const $volOn = $('.turnUp');
+    const $volMute = $('.turnOff');
 
     // let's check if we've played this game before and load the top score!
     if (localStorage.length > 0) {
         scoreHistory = localStorage.getItem('previousScore');
         $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
     }
+
+    // volume mute
+    $volMute.on('click', volumeOff);
+
+    // volume on
+    $volOn.on('click', volumeOn);
 
     // game start!
     $start.on('click', runGame);
@@ -48,6 +61,12 @@ $(document).ready(function() {
 
         // animate the kitty
         $kitty.addClass('animate');
+
+        // play the music
+        music.loop = true;
+        music.fastSeek(0);
+        music.volume = 0.5;
+        music.play();
 
         // run the countdown timer 30s -> 0s
         const intervalTimer = setInterval(function() {
@@ -89,6 +108,11 @@ $(document).ready(function() {
                 }
                 //bring up the try again modal
                 $endModal.show('slow');
+                // stop the music
+                music.pause();
+                // play ending chime
+                chime.volume = 0.5;
+                chime.play();
                 // stop listening for clicks on the kitty
                 $kitty.off();
                 // stop listening for keydown on DOM
@@ -117,6 +141,9 @@ $(document).ready(function() {
             }
             // clicker functionality
             function iveBeenClicked() {
+                // play noise
+                clickAudio.volume = 0.1;
+                clickAudio.play();
                 // update the score variable
                 scoreCounter++;
                 // update the score element with the score, taking into   account the design of '00000' appearance
@@ -137,4 +164,22 @@ $(document).ready(function() {
 
         } //end of kittyClicker function
     } //end of runGame function
+
+    // volume off function
+    function volumeOff() {
+        $volOn.css('color', 'black');
+        $volMute.css('color', 'rgba(0, 0, 0, 0.3)');
+        music.muted = true;
+        chime.muted = true;
+        clickAudio.muted = true;
+    } //end of vol off function
+
+    // volume on function
+    function volumeOn() {
+        $volOn.css('color', 'rgba(0, 0, 0, 0.3)');
+        $volMute.css('color', 'black');
+        music.muted = false;
+        chime.muted = false;
+        clickAudio.muted = false;
+    } //end of vol on function
 }); //end of document ready

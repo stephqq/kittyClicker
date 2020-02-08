@@ -12,6 +12,27 @@
         width: 300px;
     }
 
+    .volContainer {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        display: flex;
+        z-index: 15;
+
+        i {
+            padding-right: 15px;
+            font-size: 4rem;
+        }
+
+        .turnUp {
+            color: $timerC;
+        }
+
+        .turnOff {
+            color: black;
+        }
+    }
+
     .score {
         position: absolute;
         bottom: 0;
@@ -38,7 +59,7 @@
         position: absolute;
         top: 0;
         font-size: 13rem;
-        line-height: 1.2;
+        line-height: 1.6;
         display: none;
     }
 

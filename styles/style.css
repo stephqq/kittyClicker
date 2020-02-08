@@ -314,6 +314,29 @@ footer a:hover, footer a:focus {
   width: 300px;
 }
 
+.gameArea .volContainer {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  z-index: 15;
+}
+
+.gameArea .volContainer i {
+  padding-right: 15px;
+  font-size: 4rem;
+}
+
+.gameArea .volContainer .turnUp {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.gameArea .volContainer .turnOff {
+  color: black;
+}
+
 .gameArea .score {
   position: absolute;
   bottom: 0;
@@ -340,7 +363,7 @@ footer a:hover, footer a:focus {
   position: absolute;
   top: 0;
   font-size: 13rem;
-  line-height: 1.2;
+  line-height: 1.6;
   display: none;
 }
 
