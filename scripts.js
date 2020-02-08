@@ -46,6 +46,11 @@ $(document).ready(function() {
         let scoreCounter = 0;
         let timerCounter = 30;
 
+        // reset img if needed
+        if ($kitty.attr('src') === './assets/kittyStateThree.png') {
+            $kitty.attr('src', './assets/kitty.png');
+        }
+
         // hide the start/end modal
         if ($startModal.css("display") == 'block') {
             $startModal.hide();
@@ -119,6 +124,12 @@ $(document).ready(function() {
                 $(document).off();
                 // turn off the timer
                 clearInterval(intervalTimer);
+            } else if (timerCounter === 15) {
+                $timer.text('00:' + timerCounter);
+                $kitty.attr('src', './assets/kittyStateTwo.png');
+            } else if (timerCounter === 5) {
+                $timer.text('00:0' + timerCounter);
+                $kitty.attr('src', './assets/kittyStateThree.png');
             } else if (timerCounter < 10) {
                 $timer.text('00:0' + timerCounter);
             } else {
