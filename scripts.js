@@ -236,7 +236,7 @@ $(document).ready(function() {
             //listen for events on div
             bonusTop = getRandom(0, 70); //in vh
             bonusLeft = getRandom(0, 320); //in px
-            $bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show().one('click', spinTheBonusWheel);
+            $bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show('slow').one('click', spinTheBonusWheel);
             setTimeout(function() {
                 if ($bonus.css('display') === 'block') {
                     $bonus.hide();
