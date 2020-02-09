@@ -2,7 +2,24 @@
 $(document).ready(function() {
 
     // declare global variables!
+    let scoreCounter = 0;
+    let timerCounter = 30;
     let scoreHistory = 0;
+    let bonusGenerator = 0;
+    let bonusTop = 0;
+    let bonusLeft = 0;
+    let imgGenerator = 0;
+    const altTag = {
+        1: 'ball of yarn',
+        2: 'pet comb',
+        3: 'bowl of pet food',
+        4: 'pet collar with bell',
+        5: 'goldfish',
+        6: 'yellow and red bird',
+        7: 'yellow bow',
+        8: 'string cat toy'
+    };
+    let bonusPercent = 0;
 
     // let's load the music!
     const music = new Audio('./assets/game-music.wav');
@@ -22,6 +39,7 @@ $(document).ready(function() {
     const $topScore = $('.topScore');
     const $volOn = $('.turnUp');
     const $volMute = $('.turnOff');
+    const $bonus = $('.bonusContainer');
 
     // let's check if we've played this game before and load the top score!
     if (localStorage.length > 0) {
@@ -43,9 +61,6 @@ $(document).ready(function() {
 
     // run game function
     function runGame() {
-        let scoreCounter = 0;
-        let timerCounter = 30;
-
         // reset img if needed
         if ($kitty.attr('src') === './assets/kittyStateThree.png') {
             $kitty.attr('src', './assets/kitty.png');
@@ -76,11 +91,18 @@ $(document).ready(function() {
         // run the countdown timer 30s -> 0s
         const intervalTimer = setInterval(function() {
             timerCounter--;
+            // run the bonus multiplier check
+            bonusMultiplier();
             // update the timer element & stop it as well as everything else
             if (timerCounter == -1) {
+                //close any bonus
+                if ($bonus.css('display') === 'block') {
+                    $bonus.hide();
+                }
                 //timer reset
                 $timer.hide();
                 $timer.text('00:30');
+                timerCounter = 30;
                 //score reset
                 $score.hide();
                 $score.text('00000');
@@ -113,10 +135,12 @@ $(document).ready(function() {
                 }
                 //bring up the try again modal
                 $endModal.show('slow');
+                //reset the score
+                scoreCounter = 0;
                 // stop the music
                 music.pause();
                 // play ending chime
-                chime.volume = 0.5;
+                chime.volume = 0.2;
                 chime.play();
                 // stop listening for clicks on the kitty
                 $kitty.off();
@@ -149,6 +173,10 @@ $(document).ready(function() {
                 iveBeenClicked();
             } else if (event.keyCode === 32) {
                 iveBeenClicked();
+            } else if (event.keyCode === 13) {
+                if ($bonus.css('display') === 'block') {
+                    spinTheBonusWheel()
+                }
             }
             // clicker functionality
             function iveBeenClicked() {
@@ -193,4 +221,54 @@ $(document).ready(function() {
         chime.muted = false;
         clickAudio.muted = false;
     } //end of vol on function
+
+    // bonus multiplier function
+    function bonusMultiplier() {
+        //every second randomly generate a number to determine if a bonus item will appear
+        bonusGenerator = Math.random();
+        //if the determined range is generated
+        if (bonusGenerator > .5 && bonusGenerator < .7) {
+            //randomly generate img src html in div
+            imgGenerator = getRandom(1, 9);
+            $bonus.html(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
+            //randomly generate top: bottom: values for div css
+            //show div
+            //listen for events on div
+            bonusTop = getRandom(0, 70); //in vh
+            bonusLeft = getRandom(0, 320); //in px
+            $bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show().one('click', spinTheBonusWheel);
+            setTimeout(function() {
+                if ($bonus.css('display') === 'block') {
+                    $bonus.hide();
+                }
+            }, 3000);
+        }
+    } //end of bonus multiplier function
+
+    //spin the bonus wheel function
+    function spinTheBonusWheel() {
+        //on fire randomly determine bonus % bw a range
+        bonusPercent = getRandom(1.2, 1.75);
+        //apply determined bonus % on score
+        scoreCounter += scoreCounter * bonusPercent;
+        $bonus.hide();
+        if (scoreCounter < 10) {
+            $score.text('0000' + scoreCounter);
+        } else if (scoreCounter < 100) {
+            $score.text('000' + scoreCounter);
+        } else if (scoreCounter < 1000) {
+            $score.text('00' + scoreCounter);
+        } else if (scoreCounter < 10000) {
+            $score.text('0' + scoreCounter);
+        } else {
+            $score.text(scoreCounter);
+        }
+    } //end of spin the bonus wheel function
+
+    // random number bw min max function
+    function getRandom(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    } //end of random num gen function
 }); //end of document ready

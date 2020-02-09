@@ -33,6 +33,13 @@
         }
     }
 
+    .bonusContainer {
+        display: none;
+        position: absolute;
+        width: 50px;
+        z-index: 25;
+    }
+
     .score {
         position: absolute;
         bottom: 0;
