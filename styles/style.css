@@ -344,7 +344,7 @@ footer a:hover, footer a:focus {
 .gameArea .bonusContainer {
   display: none;
   position: absolute;
-  width: 50px;
+  width: 75px;
   z-index: 25;
 }
 
