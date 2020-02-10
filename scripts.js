@@ -56,9 +56,6 @@ $(document).ready(function() {
     // game start!
     $start.on('click', runGame);
 
-    // game replay!
-    $replay.on('click', runGame);
-
     // run game function
     function runGame() {
         // reset img if needed
@@ -98,6 +95,7 @@ $(document).ready(function() {
                 //close any bonus
                 if ($bonus.css('display') === 'block') {
                     $bonus.hide();
+                    console.log('end of game bonus shut down');
                 }
                 //timer reset
                 $timer.hide();
@@ -146,6 +144,11 @@ $(document).ready(function() {
                 $kitty.off();
                 // stop listening for keydown on DOM
                 $(document).off();
+                // game replay! - buffer added to event listener fire to address bug with score carrying over when the replay button is pressed too soon
+                setTimeout(function() {
+                    $replay.on('click', runGame);
+                    console.log('firing the try again listener');
+                }, 3000);
                 // turn off the timer
                 clearInterval(intervalTimer);
             } else if (timerCounter === 15) {
@@ -176,10 +179,12 @@ $(document).ready(function() {
             } else if (event.keyCode === 13) {
                 if ($bonus.css('display') === 'block') {
                     spinTheBonusWheel()
+                    console.log('firing the bonus wheel');
                 }
             }
             // clicker functionality
             function iveBeenClicked() {
+                console.log('clicked the kitty');
                 // play noise
                 clickAudio.volume = 0.1;
                 clickAudio.play();
@@ -226,20 +231,24 @@ $(document).ready(function() {
     function bonusMultiplier() {
         //every second randomly generate a number to determine if a bonus item will appear
         bonusGenerator = Math.random();
+        console.log('bonus multiplier roll: ' + bonusGenerator);
         //if the determined range is generated
         if (bonusGenerator > .5 && bonusGenerator < .7) {
             //randomly generate img src html in div
             imgGenerator = getRandom(1, 9);
             $bonus.html(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
+            console.log(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
             //randomly generate top: bottom: values for div css
             //show div
             //listen for events on div
             bonusTop = getRandom(0, 70); //in vh
             bonusLeft = getRandom(0, 320); //in px
+            console.log('top: ' + bonusTop + 'vh, left: ' + bonusLeft);
             $bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show('slow').one('click', spinTheBonusWheel);
             setTimeout(function() {
                 if ($bonus.css('display') === 'block') {
                     $bonus.hide();
+                    console.log('you failed to click the bonus in time')
                 }
             }, 3000);
         }
@@ -249,6 +258,7 @@ $(document).ready(function() {
     function spinTheBonusWheel() {
         //on fire randomly determine bonus % bw a range
         bonusPercent = getRandom(1.2, 1.75);
+        console.log('bonus wheel spun: ' + bonusPercent);
         //apply determined bonus % on score
         scoreCounter += scoreCounter * bonusPercent;
         $bonus.hide();
