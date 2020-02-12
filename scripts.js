@@ -1,284 +1,305 @@
 // let's get our document ready!
 $(document).ready(function() {
+    kittyClicker.init();
+}); //end of document ready
 
-    // declare global variables!
-    let scoreCounter = 0;
-    let timerCounter = 30;
-    let scoreHistory = 0;
-    let bonusGenerator = 0;
-    let bonusTop = 0;
-    let bonusLeft = 0;
-    let imgGenerator = 0;
-    const altTag = {
-        1: 'ball of yarn',
-        2: 'pet comb',
-        3: 'bowl of pet food',
-        4: 'pet collar with bell',
-        5: 'goldfish',
-        6: 'yellow and red bird',
-        7: 'yellow bow',
-        8: 'string cat toy'
-    };
-    let bonusPercent = 0;
+const kittyClicker = {};
 
+kittyClicker.init = function() {
+    kittyClicker.loadAudio();
+    kittyClicker.declareGlobal();
+    kittyClicker.grabDOMElements();
+    kittyClicker.checkScoreHistory();
+    kittyClicker.listenUp();
+} //end of init method
+
+kittyClicker.loadAudio = function() {
     // let's load the music!
-    const music = new Audio('./assets/game-music.wav');
-    const chime = new Audio('./assets/endOfGame.wav');
-    const clickAudio = new Audio('./assets/click.wav');
-    
-    // let's grab some elements on the page!
-    const $start = $('.start');
-    const $startModal = $('.startModal');
-    const $endModal = $('.endModal');
-    const $timer = $('.timer');
-    const $kitty = $('img');
-    const $kittyContainer = $('.imgContainer');
-    const $score = $('.score');
-    const $finalScore = $('.finalScore');
-    const $replay = $('.tryAgain');
-    const $topScore = $('.topScore');
-    const $volOn = $('.turnUp');
-    const $volMute = $('.turnOff');
-    const $bonus = $('.bonusContainer');
+    kittyClicker.musicCatalogue = {};
+    kittyClicker.musicCatalogue.music = new Audio('./assets/game-music.wav');
+    kittyClicker.musicCatalogue.chime = new Audio('./assets/endOfGame.wav');
+    kittyClicker.musicCatalogue.clickAudio = new Audio('./assets/click.wav');
+} //end of loadAudio
 
+kittyClicker.declareGlobal = function() {
+    kittyClicker.scoreCounter = 0;
+    kittyClicker.timerCounter = 30;
+} //end of declareGlobal
+
+kittyClicker.grabDOMElements = function() {
+    // let's grab some elements on the page!
+    kittyClicker.$start = $('.start');
+    kittyClicker.$startModal = $('.startModal');
+    kittyClicker.$endModal = $('.endModal');
+    kittyClicker.$timer = $('.timer');
+    kittyClicker.$kitty = $('img');
+    kittyClicker.$kittyContainer = $('.imgContainer');
+    kittyClicker.$score = $('.score');
+    kittyClicker.$finalScore = $('.finalScore');
+    kittyClicker.$replay = $('.tryAgain');
+    kittyClicker.$topScore = $('.topScore');
+    kittyClicker.$volOn = $('.turnUp');
+    kittyClicker.$volMute = $('.turnOff');
+    kittyClicker.$bonus = $('.bonusContainer');
+} //end of grabDOMElements
+
+kittyClicker.checkScoreHistory = function() {
     // let's check if we've played this game before and load the top score!
     if (localStorage.length > 0) {
-        scoreHistory = localStorage.getItem('previousScore');
-        $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
+        kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    }
+} //end of checkScoreHistory
+
+kittyClicker.listenUp = function() {
+    //attach some event listeners
+    kittyClicker.$volMute.on('click', kittyClicker.volumeOff);
+    kittyClicker.$volOn.on('click', kittyClicker.volumeOn);
+    kittyClicker.$start.on('click', kittyClicker.runGame);
+} //end of listenUp
+
+kittyClicker.volumeOff = function() {
+    if (kittyClicker.musicCatalogue.music.muted !== true) {
+        kittyClicker.$volOn.css('color', 'black');
+        kittyClicker.$volMute.css('color', 'rgba(0, 0, 0, 0.3)');
+        for (let audioFile in kittyClicker.musicCatalogue) {
+            kittyClicker.musicCatalogue[audioFile].muted = true;
+        }
+    }
+} //end of vol off method
+
+kittyClicker.volumeOn = function() {
+    if (kittyClicker.musicCatalogue.music.muted !== false) {
+        kittyClicker.$volOn.css('color', 'rgba(0, 0, 0, 0.3)');
+        kittyClicker.$volMute.css('color', 'black');
+        for (let audioFile in kittyClicker.musicCatalogue) {
+            kittyClicker.musicCatalogue[audioFile].muted = false;
+        }
+    }
+} //end of vol on method
+
+kittyClicker.getRandom = function(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+} //end of random num gen method
+
+// clicker functionality
+kittyClicker.iveBeenClicked = function() {
+    // play noise
+    kittyClicker.musicCatalogue.clickAudio.volume = 0.1;
+    kittyClicker.musicCatalogue.clickAudio.play();
+    // update the score variable
+    kittyClicker.scoreCounter++;
+    //animate on event
+    kittyClicker.$kittyContainer.toggleClass('animateClick');
+    kittyClicker.updateScore();
+} //end of iveBeenClicked method
+
+kittyClicker.updateScore = function() {
+    // update the score element with the score, taking into account the design of '00000' appearance
+    // NOTE: I would've used .padStart() for this to avoid using if/else but it's not supported on IE :( bad IE
+    if (kittyClicker.scoreCounter < 10) {
+        kittyClicker.$score.text('0000' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 100) {
+        kittyClicker.$score.text('000' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 1000) {
+        kittyClicker.$score.text('00' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 10000) {
+        kittyClicker.$score.text('0' + kittyClicker.scoreCounter);
+    } else {
+        kittyClicker.$score.text(kittyClicker.scoreCounter);
+    }    
+} //end of updateScore method
+
+kittyClicker.eventDeterminator = function() {
+    if (event.type === 'click' || event.keyCode === 32) {
+        kittyClicker.iveBeenClicked();
+    } else if (event.keyCode === 13) {
+        if (kittyClicker.$bonus.css('display') === 'block') {
+            kittyClicker.spinTheBonusWheel();
+        }
+    }
+} //end of eventDeterminator method
+
+kittyClicker.spinTheBonusWheel = function() {
+    //on fire randomly determine bonus % bw a range
+    const bonusPercent = kittyClicker.getRandom(1.2, 1.75);
+    //apply determined bonus % on score
+    kittyClicker.scoreCounter += kittyClicker.scoreCounter * bonusPercent;
+    //hide the bonus item
+    kittyClicker.$bonus.hide();
+    kittyClicker.updateScore();
+} //end of spin the bonus wheel method
+
+kittyClicker.bonusMultiplier = function() {
+    //every second randomly generate a number to determine if a bonus item will appear
+    const bonusGenerator = Math.random();
+    //if the determined range is generated
+    if (bonusGenerator > .5 && bonusGenerator < .7) {
+        //randomly generate img src html in div
+        const imgGenerator = kittyClicker.getRandom(1, 9);
+        const altTag = {
+            1: 'ball of yarn',
+            2: 'pet comb',
+            3: 'bowl of pet food',
+            4: 'pet collar with bell',
+            5: 'goldfish',
+            6: 'yellow and red bird',
+            7: 'yellow bow',
+            8: 'string cat toy'
+        };
+        kittyClicker.$bonus.html(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
+        //randomly generate top: bottom: values for div css
+        //show div
+        //listen for events on div
+        const bonusTop = kittyClicker.getRandom(0, 70); //in vh
+        const bonusLeft = kittyClicker.getRandom(0, 320); //in px
+        kittyClicker.$bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show('slow').one('click', kittyClicker.spinTheBonusWheel);
+        //close the div after 3 seconds if not clicked
+        setTimeout(function() {
+            if (kittyClicker.$bonus.css('display') === 'block') {
+                kittyClicker.$bonus.hide();
+            }
+        }, 3000);
+    }
+} //end of bonus multiplier method
+
+kittyClicker.setUpGame = function() {
+    // reset img if needed
+    if (kittyClicker.$kitty.attr('src') !== './assets/kitty.png') {
+        kittyClicker.$kitty.attr('src', './assets/kitty.png');
     }
 
-    // volume mute
-    $volMute.on('click', volumeOff);
+    // hide the start/end modal
+    if (kittyClicker.$startModal.css("display") == 'block') {
+        kittyClicker.$startModal.hide();
+    } else if (kittyClicker.$endModal.css("display") == 'block') {
+        kittyClicker.$endModal.hide();
+    }
 
-    // volume on
-    $volOn.on('click', volumeOn);
+    // show the countdown timer
+    kittyClicker.$timer.show();
 
-    // game start!
-    $start.on('click', runGame);
+    // show the score
+    kittyClicker.$score.show();
 
-    // run game function
-    function runGame() {
-        // reset img if needed
-        if ($kitty.attr('src') === './assets/kittyStateThree.png') {
-            $kitty.attr('src', './assets/kitty.png');
+    // animate the kitty
+    kittyClicker.$kitty.addClass('animate');    
+
+    // play the music
+    kittyClicker.musicCatalogue.music.loop = true;
+    kittyClicker.musicCatalogue.music.currentTime = 0;
+    kittyClicker.musicCatalogue.music.volume = 0.5;
+    kittyClicker.musicCatalogue.music.play();
+    
+    // listen for clicks on the kitty
+    kittyClicker.$kitty.on('click', kittyClicker.eventDeterminator);
+
+    // listen for keypress events on the DOM - accessibility feature
+    $(document).on('keyup', kittyClicker.eventDeterminator);
+} //end of setUpGame method
+
+kittyClicker.shutDown = function() {
+    //close any bonus
+    if (kittyClicker.$bonus.css('display') === 'block') {
+        kittyClicker.$bonus.hide();
+    }
+    //animations turn off
+    kittyClicker.$kitty.removeClass('animate');
+    kittyClicker.$kittyContainer.removeClass('animateClick');
+    //hide game area elements
+    kittyClicker.$timer.hide();
+    kittyClicker.$score.hide();
+    // stop the music
+    kittyClicker.musicCatalogue.music.pause();
+    // stop listening for clicks on the kitty
+    kittyClicker.$kitty.off();
+    // stop listening for keydown on DOM
+    $(document).off();
+    // play ending chime
+    kittyClicker.musicCatalogue.chime.volume = 0.2;
+    kittyClicker.musicCatalogue.chime.play();
+    //bring up the try again modal
+    kittyClicker.$endModal.show('slow');
+} //end of shutDown method
+
+kittyClicker.resetGame = function() {
+    //timer reset
+    kittyClicker.$timer.text('00:30');
+    kittyClicker.timerCounter = 30;
+    //score reset
+    kittyClicker.$score.text('00000');
+    kittyClicker.scoreCounter = 0;
+    // game replay! - buffer added to event listener fire to address bug with score carrying over when the replay button is pressed too soon
+    setTimeout(function() {
+        kittyClicker.$replay.one('click', kittyClicker.runGame);
+    }, 3000);
+    // turn off the timer
+    clearInterval(kittyClicker.intervalTimer);
+} //end of resetGame method
+
+kittyClicker.setFinalScore = function() {
+    //update the final score
+    // NOTE: I would've used .padStart() for this to avoid using if/else but it's not supported on IE :( bad IE
+    if (kittyClicker.scoreCounter < 10) {
+        kittyClicker.$finalScore.text('0000' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 100) {
+        kittyClicker.$finalScore.text('000' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 1000) {
+        kittyClicker.$finalScore.text('00' + kittyClicker.scoreCounter);
+    } else if (kittyClicker.scoreCounter < 10000) {
+        kittyClicker.$finalScore.text('0' + kittyClicker.scoreCounter);
+    } else {
+        kittyClicker.$finalScore.text(kittyClicker.scoreCounter);
+    }
+
+    //update localStorage if it's a new top score and update the DOM
+    if (localStorage.length === 0) {
+        localStorage.setItem('previousScore', kittyClicker.scoreCounter);
+        kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    } else if (localStorage.length === 1) {
+        if (localStorage.getItem('previousScore') < kittyClicker.scoreCounter) {
+            localStorage.setItem('previousScore', kittyClicker.scoreCounter);
+            kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+            kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
         }
+    }
+} //end of setFinalScore method
 
-        // hide the start/end modal
-        if ($startModal.css("display") == 'block') {
-            $startModal.hide();
-        } else if ($endModal.css("display") == 'block') {
-            $endModal.hide();
-        }
+kittyClicker.countdownTimer = function() {
+    // run the countdown timer 30s -> 0s
+    kittyClicker.intervalTimer = setInterval(function() {
+        //decrease timer
+        kittyClicker.timerCounter--;
+        // run the bonus multiplier check
+        kittyClicker.bonusMultiplier();
+        //determine what needs to be updated based on timer
+        kittyClicker.countdownTimerUpdate();
+    }, 1000);
+} //end of countdownTimer method
 
-        // show the countdown timer
-        $timer.show();
+kittyClicker.countdownTimerUpdate = function() {
+    // update the timer element & stop it as well as everything else
+    if (kittyClicker.timerCounter == -1) {
+        kittyClicker.setFinalScore();
+        kittyClicker.shutDown();
+        kittyClicker.resetGame();
+    } else if (kittyClicker.timerCounter === 15) {
+        kittyClicker.$timer.text('00:' + kittyClicker.timerCounter);
+        kittyClicker.$kitty.attr('src', './assets/kittyStateTwo.png');
+    } else if (kittyClicker.timerCounter === 5) {
+        kittyClicker.$timer.text('00:0' + kittyClicker.timerCounter);
+        kittyClicker.$kitty.attr('src', './assets/kittyStateThree.png');
+    } else if (kittyClicker.timerCounter < 10) {
+        kittyClicker.$timer.text('00:0' + kittyClicker.timerCounter);
+    } else {
+        kittyClicker.$timer.text('00:' + kittyClicker.timerCounter);
+    }
+} //end of countdownTimerUpdate method
 
-        // show the score
-        $score.show();
-
-        // animate the kitty
-        $kitty.addClass('animate');
-
-        // play the music
-        music.loop = true;
-        music.currentTime = 0;
-        music.volume = 0.5;
-        music.play();
-
-        // run the countdown timer 30s -> 0s
-        const intervalTimer = setInterval(function() {
-            timerCounter--;
-            // run the bonus multiplier check
-            bonusMultiplier();
-            // update the timer element & stop it as well as everything else
-            if (timerCounter == -1) {
-                //close any bonus
-                if ($bonus.css('display') === 'block') {
-                    $bonus.hide();
-                    console.log('end of game bonus shut down');
-                }
-                //timer reset
-                $timer.hide();
-                $timer.text('00:30');
-                timerCounter = 30;
-                //score reset
-                $score.hide();
-                $score.text('00000');
-                //animations turn off
-                $kitty.removeClass('animate');
-                $kittyContainer.removeClass('animateClick');
-                //update the final score
-                if (scoreCounter < 10) {
-                    $finalScore.text('0000' + scoreCounter);
-                } else if (scoreCounter < 100) {
-                    $finalScore.text('000' + scoreCounter);
-                } else if (scoreCounter < 1000) {
-                    $finalScore.text('00' + scoreCounter);
-                } else if (scoreCounter < 10000) {
-                    $finalScore.text('0' + scoreCounter);
-                } else {
-                    $finalScore.text(scoreCounter);
-                }
-                //update localStorage if it's a new top score and update the DOM
-                if (localStorage.length === 0) {
-                    localStorage.setItem('previousScore', scoreCounter);
-                    scoreHistory = localStorage.getItem('previousScore');
-                    $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
-                } else if (localStorage.length === 1) {
-                    if (localStorage.getItem('previousScore') < scoreCounter) {
-                        localStorage.setItem('previousScore', scoreCounter);
-                        scoreHistory = localStorage.getItem('previousScore');
-                        $topScore.html(`Top Score:<span></span> ${scoreHistory}`);
-                    }
-                }
-                //bring up the try again modal
-                $endModal.show('slow');
-                //reset the score
-                scoreCounter = 0;
-                // stop the music
-                music.pause();
-                // play ending chime
-                chime.volume = 0.2;
-                chime.play();
-                // stop listening for clicks on the kitty
-                $kitty.off();
-                // stop listening for keydown on DOM
-                $(document).off();
-                // game replay! - buffer added to event listener fire to address bug with score carrying over when the replay button is pressed too soon
-                setTimeout(function() {
-                    $replay.on('click', runGame);
-                    console.log('firing the try again listener');
-                }, 3000);
-                // turn off the timer
-                clearInterval(intervalTimer);
-            } else if (timerCounter === 15) {
-                $timer.text('00:' + timerCounter);
-                $kitty.attr('src', './assets/kittyStateTwo.png');
-            } else if (timerCounter === 5) {
-                $timer.text('00:0' + timerCounter);
-                $kitty.attr('src', './assets/kittyStateThree.png');
-            } else if (timerCounter < 10) {
-                $timer.text('00:0' + timerCounter);
-            } else {
-                $timer.text('00:' + timerCounter);
-            }
-        }, 1000);
-
-        // listen for clicks on the kitty
-        $kitty.on('click', kittyClicker);
-
-        // listen for keypress events on the DOM - accessibility feature
-        $(document).on('keyup', kittyClicker);
-
-        // kitty clicker function tied to event listeners
-        function kittyClicker() {
-            if (event.type === 'click') {
-                iveBeenClicked();
-            } else if (event.keyCode === 32) {
-                iveBeenClicked();
-            } else if (event.keyCode === 13) {
-                if ($bonus.css('display') === 'block') {
-                    spinTheBonusWheel()
-                    console.log('firing the bonus wheel');
-                }
-            }
-            // clicker functionality
-            function iveBeenClicked() {
-                console.log('clicked the kitty');
-                // play noise
-                clickAudio.volume = 0.1;
-                clickAudio.play();
-                // update the score variable
-                scoreCounter++;
-                // update the score element with the score, taking into   account the design of '00000' appearance
-                if (scoreCounter < 10) {
-                    $score.text('0000' + scoreCounter);
-                } else if (scoreCounter < 100) {
-                    $score.text('000' + scoreCounter);
-                } else if (scoreCounter < 1000) {
-                    $score.text('00' + scoreCounter);
-                } else if (scoreCounter < 10000) {
-                    $score.text('0' + scoreCounter);
-                } else {
-                    $score.text(scoreCounter);
-                }
-                //animate on event
-                $kittyContainer.toggleClass('animateClick');
-            } //end of iveBeenClicked function
-
-        } //end of kittyClicker function
-    } //end of runGame function
-
-    // volume off function
-    function volumeOff() {
-        $volOn.css('color', 'black');
-        $volMute.css('color', 'rgba(0, 0, 0, 0.3)');
-        music.muted = true;
-        chime.muted = true;
-        clickAudio.muted = true;
-    } //end of vol off function
-
-    // volume on function
-    function volumeOn() {
-        $volOn.css('color', 'rgba(0, 0, 0, 0.3)');
-        $volMute.css('color', 'black');
-        music.muted = false;
-        chime.muted = false;
-        clickAudio.muted = false;
-    } //end of vol on function
-
-    // bonus multiplier function
-    function bonusMultiplier() {
-        //every second randomly generate a number to determine if a bonus item will appear
-        bonusGenerator = Math.random();
-        console.log('bonus multiplier roll: ' + bonusGenerator);
-        //if the determined range is generated
-        if (bonusGenerator > .5 && bonusGenerator < .7) {
-            //randomly generate img src html in div
-            imgGenerator = getRandom(1, 9);
-            $bonus.html(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
-            console.log(`<img src="./assets/bonus/png/${imgGenerator}.png" alt="${altTag[imgGenerator]}">`);
-            //randomly generate top: bottom: values for div css
-            //show div
-            //listen for events on div
-            bonusTop = getRandom(0, 70); //in vh
-            bonusLeft = getRandom(0, 320); //in px
-            console.log('top: ' + bonusTop + 'vh, left: ' + bonusLeft);
-            $bonus.css({'top': bonusTop + 'vh', 'left': bonusLeft + 'px'}).show('slow').one('click', spinTheBonusWheel);
-            setTimeout(function() {
-                if ($bonus.css('display') === 'block') {
-                    $bonus.hide();
-                    console.log('you failed to click the bonus in time')
-                }
-            }, 3000);
-        }
-    } //end of bonus multiplier function
-
-    //spin the bonus wheel function
-    function spinTheBonusWheel() {
-        //on fire randomly determine bonus % bw a range
-        bonusPercent = getRandom(1.2, 1.75);
-        console.log('bonus wheel spun: ' + bonusPercent);
-        //apply determined bonus % on score
-        scoreCounter += scoreCounter * bonusPercent;
-        $bonus.hide();
-        if (scoreCounter < 10) {
-            $score.text('0000' + scoreCounter);
-        } else if (scoreCounter < 100) {
-            $score.text('000' + scoreCounter);
-        } else if (scoreCounter < 1000) {
-            $score.text('00' + scoreCounter);
-        } else if (scoreCounter < 10000) {
-            $score.text('0' + scoreCounter);
-        } else {
-            $score.text(scoreCounter);
-        }
-    } //end of spin the bonus wheel function
-
-    // random number bw min max function
-    function getRandom(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    } //end of random num gen function
-}); //end of document ready
+kittyClicker.runGame = function() {
+    kittyClicker.setUpGame();
+    kittyClicker.countdownTimer();
+} //end of runGame method
