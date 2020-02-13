@@ -98,3 +98,21 @@
         transform: rotate(0deg);
     }
 }
+
+@keyframes kittyDanceReverse {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    30% {
+        transform: rotate(-25deg);
+    }
+
+    60% {
+        transform: rotate(25deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}

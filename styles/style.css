@@ -182,6 +182,10 @@ img {
   max-width: 100%;
 }
 
+ul {
+  list-style: none;
+}
+
 html {
   font-size: 62.5%;
 }
@@ -224,7 +228,8 @@ main {
 }
 
 main .startModal,
-main .endModal {
+main .endModal,
+main .selectModal {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -233,12 +238,59 @@ main .endModal {
   width: 90%;
   text-align: center;
   background: rgba(255, 255, 255, 0.9);
-  padding: 75px 0;
+  padding: 30px 0;
   border-radius: 10px;
 }
 
+main .startModal ul,
+main .endModal ul,
+main .selectModal ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+main .startModal ul li:hover,
+main .startModal ul li:focus,
+main .endModal ul li:hover,
+main .endModal ul li:focus,
+main .selectModal ul li:hover,
+main .selectModal ul li:focus {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+}
+
+main .startModal img,
+main .endModal img,
+main .selectModal img {
+  margin-top: 20px;
+  width: 100px;
+}
+
+main .startModal .dance,
+main .endModal .dance,
+main .selectModal .dance {
+  -webkit-animation: kittyDance 5s infinite;
+          animation: kittyDance 5s infinite;
+}
+
+main .startModal .reverse,
+main .endModal .reverse,
+main .selectModal .reverse {
+  -webkit-animation: kittyDanceReverse 5s infinite;
+          animation: kittyDanceReverse 5s infinite;
+}
+
 main .startModal button,
-main .endModal button {
+main .endModal button,
+main .selectModal button {
   background: #fcb3c4;
   border: 5px solid transparent;
   padding: 5px 25px;
@@ -250,21 +302,25 @@ main .endModal button {
 
 main .startModal button:hover, main .startModal button:focus,
 main .endModal button:hover,
-main .endModal button:focus {
+main .endModal button:focus,
+main .selectModal button:hover,
+main .selectModal button:focus {
   border: 5px solid gray;
 }
 
 main .startModal button:active,
-main .endModal button:active {
+main .endModal button:active,
+main .selectModal button:active {
   -webkit-transform: scale(0.9);
           transform: scale(0.9);
 }
 
+main .startModal,
 main .endModal {
   display: none;
 }
 
-main .endModal .finalScore {
+main .finalScore {
   font-size: 7rem;
   font-weight: 700;
 }
@@ -423,6 +479,44 @@ footer a:hover, footer a:focus {
   60% {
     -webkit-transform: rotate(-25deg);
             transform: rotate(-25deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@-webkit-keyframes kittyDanceReverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  30% {
+    -webkit-transform: rotate(-25deg);
+            transform: rotate(-25deg);
+  }
+  60% {
+    -webkit-transform: rotate(25deg);
+            transform: rotate(25deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@keyframes kittyDanceReverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  30% {
+    -webkit-transform: rotate(-25deg);
+            transform: rotate(-25deg);
+  }
+  60% {
+    -webkit-transform: rotate(25deg);
+            transform: rotate(25deg);
   }
   100% {
     -webkit-transform: rotate(0deg);

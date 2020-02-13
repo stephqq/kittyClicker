@@ -37,8 +37,9 @@ kittyClicker.grabDOMElements = function() {
     kittyClicker.$start = $('.start');
     kittyClicker.$startModal = $('.startModal');
     kittyClicker.$endModal = $('.endModal');
+    kittyClicker.$selectModal = $('.selectModal');
     kittyClicker.$timer = $('.timer');
-    kittyClicker.$kitty = $('img');
+    kittyClicker.$charSelect = $('.selectMe');
     kittyClicker.$kittyContainer = $('.imgContainer');
     kittyClicker.$score = $('.score');
     kittyClicker.$finalScore = $('.finalScore');
@@ -61,8 +62,18 @@ kittyClicker.listenUp = function() {
     //attach some event listeners
     kittyClicker.$volMute.on('click', kittyClicker.volumeOff);
     kittyClicker.$volOn.on('click', kittyClicker.volumeOn);
+    kittyClicker.$charSelect.one('click', kittyClicker.assignCharacter);
     kittyClicker.$start.on('click', kittyClicker.runGame);
 } //end of listenUp
+
+kittyClicker.assignCharacter = function(e) {
+    e.preventDefault();
+    kittyClicker.$kittyContainer.html(`<img src="${e.target.src}" class="kitty" alt="${e.target.alt}">`);
+    kittyClicker.$kitty = $('.kitty');
+    kittyClicker.kittyURL = e.target.src;
+    kittyClicker.$selectModal.hide();
+    kittyClicker.$startModal.show();
+}
 
 kittyClicker.volumeOff = function() {
     if (!kittyClicker.musicCatalogue.music.muted) {
@@ -97,7 +108,7 @@ kittyClicker.iveBeenClicked = function() {
     // update the score variable
     kittyClicker.scoreCounter++;
     //animate on event
-    kittyClicker.$kittyContainer.toggleClass('animateClick');
+    kittyClicker.$kitty.toggleClass('animateClick');
     kittyClicker.updateScore();
 } //end of iveBeenClicked method
 
@@ -174,8 +185,8 @@ kittyClicker.bonusMultiplier = function() {
 
 kittyClicker.setUpGame = function() {
     // reset img if needed
-    if (kittyClicker.$kitty.attr('src') !== './assets/kitty.png') {
-        kittyClicker.$kitty.attr('src', './assets/kitty.png');
+    if (kittyClicker.$kitty.attr('src').includes('State2') || kittyClicker.$kitty.attr('src').includes('State3')) {
+        kittyClicker.$kitty.attr('src', kittyClicker.kittyURL);
     }
 
     // hide the start/end modal
@@ -192,14 +203,14 @@ kittyClicker.setUpGame = function() {
     kittyClicker.$score.show();
 
     // animate the kitty
-    kittyClicker.$kitty.addClass('animate');    
+    kittyClicker.$kittyContainer.addClass('animate');    
 
     // play the music
     kittyClicker.musicCatalogue.music.currentTime = 0;
     kittyClicker.musicCatalogue.music.play();
     
     // listen for clicks on the kitty
-    kittyClicker.$kitty.on('click', kittyClicker.eventDeterminator);
+    kittyClicker.$kittyContainer.on('click', kittyClicker.eventDeterminator);
 
     // listen for keypress events on the DOM - accessibility feature
     $(document).on('keyup', kittyClicker.eventDeterminator);
@@ -211,15 +222,15 @@ kittyClicker.shutDown = function() {
         kittyClicker.$bonus.hide().off();
     }
     //animations turn off
-    kittyClicker.$kitty.removeClass('animate');
-    kittyClicker.$kittyContainer.removeClass('animateClick');
+    kittyClicker.$kittyContainer.removeClass('animate');
+    kittyClicker.$kitty.removeClass('animateClick');
     //hide game area elements
     kittyClicker.$timer.hide();
     kittyClicker.$score.hide();
     // stop the music
     kittyClicker.musicCatalogue.music.pause();
     // stop listening for clicks on the kitty
-    kittyClicker.$kitty.off();
+    kittyClicker.$kittyContainer.off();
     // stop listening for keydown on DOM
     $(document).off();
     // play ending chime
@@ -292,10 +303,22 @@ kittyClicker.countdownTimerUpdate = function() {
         kittyClicker.resetGame();
     } else if (kittyClicker.timerCounter === 15) {
         kittyClicker.$timer.text('00:' + kittyClicker.timerCounter);
-        kittyClicker.$kitty.attr('src', './assets/kittyStateTwo.png');
+        if (kittyClicker.$kitty.attr('src').includes('-1')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState2-1.png');
+        } else if (kittyClicker.$kitty.attr('src').includes('-2')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState2-2.png');
+        } else if (kittyClicker.$kitty.attr('src').includes('-3')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState2-3.png');
+        }
     } else if (kittyClicker.timerCounter === 5) {
         kittyClicker.$timer.text('00:0' + kittyClicker.timerCounter);
-        kittyClicker.$kitty.attr('src', './assets/kittyStateThree.png');
+        if (kittyClicker.$kitty.attr('src').includes('-1')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState3-1.png');
+        } else if (kittyClicker.$kitty.attr('src').includes('-2')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState3-2.png');
+        } else if (kittyClicker.$kitty.attr('src').includes('-3')) {
+            kittyClicker.$kitty.attr('src', './assets/kittyState3-3.png');
+        }
     } else if (kittyClicker.timerCounter < 10) {
         kittyClicker.$timer.text('00:0' + kittyClicker.timerCounter);
     } else {
