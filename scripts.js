@@ -16,9 +16,15 @@ kittyClicker.init = function() {
 kittyClicker.loadAudio = function() {
     // let's load the music!
     kittyClicker.musicCatalogue = {};
-    kittyClicker.musicCatalogue.music = new Audio('./assets/game-music.wav');
+    kittyClicker.musicCatalogue.music = new Audio('./assets/gameMusic.wav');
+    kittyClicker.musicCatalogue.music.loop = true;
+    kittyClicker.musicCatalogue.music.volume = 0.5;
     kittyClicker.musicCatalogue.chime = new Audio('./assets/endOfGame.wav');
+    kittyClicker.musicCatalogue.chime.volume = 0.2;
     kittyClicker.musicCatalogue.clickAudio = new Audio('./assets/click.wav');
+    kittyClicker.musicCatalogue.clickAudio.volume = 0.1;
+    kittyClicker.musicCatalogue.bonusAudio = new Audio('./assets/bonusAudio.wav');
+    kittyClicker.musicCatalogue.bonusAudio.volume = 0.5;
 } //end of loadAudio
 
 kittyClicker.declareGlobal = function() {
@@ -59,7 +65,7 @@ kittyClicker.listenUp = function() {
 } //end of listenUp
 
 kittyClicker.volumeOff = function() {
-    if (kittyClicker.musicCatalogue.music.muted !== true) {
+    if (!kittyClicker.musicCatalogue.music.muted) {
         kittyClicker.$volOn.css('color', 'black');
         kittyClicker.$volMute.css('color', 'rgba(0, 0, 0, 0.3)');
         for (let audioFile in kittyClicker.musicCatalogue) {
@@ -69,7 +75,7 @@ kittyClicker.volumeOff = function() {
 } //end of vol off method
 
 kittyClicker.volumeOn = function() {
-    if (kittyClicker.musicCatalogue.music.muted !== false) {
+    if (kittyClicker.musicCatalogue.music.muted) {
         kittyClicker.$volOn.css('color', 'rgba(0, 0, 0, 0.3)');
         kittyClicker.$volMute.css('color', 'black');
         for (let audioFile in kittyClicker.musicCatalogue) {
@@ -87,7 +93,6 @@ kittyClicker.getRandom = function(min, max) {
 // clicker functionality
 kittyClicker.iveBeenClicked = function() {
     // play noise
-    kittyClicker.musicCatalogue.clickAudio.volume = 0.1;
     kittyClicker.musicCatalogue.clickAudio.play();
     // update the score variable
     kittyClicker.scoreCounter++;
@@ -123,6 +128,8 @@ kittyClicker.eventDeterminator = function() {
 } //end of eventDeterminator method
 
 kittyClicker.spinTheBonusWheel = function() {
+    //play audio
+    kittyClicker.musicCatalogue.bonusAudio.play();
     //on fire randomly determine bonus % bw a range
     const bonusPercent = kittyClicker.getRandom(1.2, 1.75);
     //apply determined bonus % on score
@@ -159,7 +166,7 @@ kittyClicker.bonusMultiplier = function() {
         //close the div after 3 seconds if not clicked
         setTimeout(function() {
             if (kittyClicker.$bonus.css('display') === 'block') {
-                kittyClicker.$bonus.hide();
+                kittyClicker.$bonus.hide().off();
             }
         }, 3000);
     }
@@ -188,9 +195,7 @@ kittyClicker.setUpGame = function() {
     kittyClicker.$kitty.addClass('animate');    
 
     // play the music
-    kittyClicker.musicCatalogue.music.loop = true;
     kittyClicker.musicCatalogue.music.currentTime = 0;
-    kittyClicker.musicCatalogue.music.volume = 0.5;
     kittyClicker.musicCatalogue.music.play();
     
     // listen for clicks on the kitty
@@ -203,7 +208,7 @@ kittyClicker.setUpGame = function() {
 kittyClicker.shutDown = function() {
     //close any bonus
     if (kittyClicker.$bonus.css('display') === 'block') {
-        kittyClicker.$bonus.hide();
+        kittyClicker.$bonus.hide().off();
     }
     //animations turn off
     kittyClicker.$kitty.removeClass('animate');
@@ -218,7 +223,6 @@ kittyClicker.shutDown = function() {
     // stop listening for keydown on DOM
     $(document).off();
     // play ending chime
-    kittyClicker.musicCatalogue.chime.volume = 0.2;
     kittyClicker.musicCatalogue.chime.play();
     //bring up the try again modal
     kittyClicker.$endModal.show('slow');
