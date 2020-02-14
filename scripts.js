@@ -68,11 +68,18 @@ kittyClicker.listenUp = function() {
 
 kittyClicker.assignCharacter = function(e) {
     e.preventDefault();
-    kittyClicker.$kittyContainer.html(`<img src="${e.target.src}" class="kitty" alt="${e.target.alt}">`);
+    //if-else to determine if the img was clicked by a mouse or if the a was clicked with the keyboard [accessibility]
+    if (e.target.nodeName === 'IMG') {
+        kittyClicker.$kittyContainer.html(`<img src="${e.target.src}" class="kitty" alt="${e.target.alt}">`);
+        kittyClicker.kittyURL = e.target.src;
+    } else {
+        kittyClicker.$kittyContainer.html(`<img src="${e.target.firstChild.src}" class="kitty" alt="${e.target.firstChild.alt}">`);
+        kittyClicker.kittyURL = e.target.firstChild.src;
+    }
     kittyClicker.$kitty = $('.kitty');
-    kittyClicker.kittyURL = e.target.src;
     kittyClicker.$selectModal.hide();
     kittyClicker.$startModal.show();
+    kittyClicker.$start.focus();
 }
 
 kittyClicker.volumeOff = function() {
@@ -237,6 +244,7 @@ kittyClicker.shutDown = function() {
     kittyClicker.musicCatalogue.chime.play();
     //bring up the try again modal
     kittyClicker.$endModal.show('slow');
+    kittyClicker.$replay.focus();
 } //end of shutDown method
 
 kittyClicker.resetGame = function() {
