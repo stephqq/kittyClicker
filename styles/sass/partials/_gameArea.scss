@@ -1,12 +1,40 @@
+.gameContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 620px) {
+    .wrapper {
+        max-width: 400px;
+    }
+
+    .gameContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .leaderboards {
+        margin-top: 15px;
+        max-width: 400px;
+    }
+}
+
+.leaderboards,
 .gameArea {
     height: 80vh;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.gameArea {
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     background: $primary;
-    border-radius: 10px;
     overflow: hidden;
+    max-width: 400px;
+    min-width: 300px;
 
     img {
         width: 300px;

@@ -3,13 +3,14 @@ $(document).ready(function() {
     kittyClicker.init();
 }); //end of document ready
 
+const userCollection = firebase.database().ref('/users');
 const kittyClicker = {};
 
 kittyClicker.init = function() {
+    kittyClicker.getData();
     kittyClicker.loadAudio();
     kittyClicker.declareGlobal();
     kittyClicker.grabDOMElements();
-    kittyClicker.checkScoreHistory();
     kittyClicker.listenUp();
 } //end of init method
 
@@ -48,23 +49,80 @@ kittyClicker.grabDOMElements = function() {
     kittyClicker.$volOn = $('.turnUp');
     kittyClicker.$volMute = $('.turnOff');
     kittyClicker.$bonus = $('.bonusContainer');
+    kittyClicker.$submit = $('.submitName');
+    kittyClicker.$submitModal = $('.helloModal');
+    kittyClicker.$leaderboard = $('.leaderboards ul');
 } //end of grabDOMElements
 
 kittyClicker.checkScoreHistory = function() {
     // let's check if we've played this game before and load the top score!
-    if (localStorage.length > 0) {
-        kittyClicker.scoreHistory = localStorage.getItem('previousScore');
-        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    //we need to get the hash assigned to the user as well for score updating
+    for (let i = 0; i < kittyClicker.sortedDataArray.length; i++) {
+        if (kittyClicker.sortedDataArray[i].name === kittyClicker.username && kittyClicker.sortedDataArray[i].identifier === kittyClicker.useridentifier) {
+            kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.sortedDataArray[i].score}`);
+            kittyClicker.userScore = kittyClicker.sortedDataArray[i].score;
+            kittyClicker.userHash = kittyClicker.sortedDataArray[i].hash;
+        }
     }
+
+    //old localstorage way
+    // if (localStorage.length > 0) {
+    //     kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+    //     kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    // }
 } //end of checkScoreHistory
+
+kittyClicker.getData = function() {
+    //there must be an easier way to do this but we haven't learned yet so this is what my logic told me to do
+    userCollection.on('value', (data) => {
+        //clear leaderboard bc this listener re-appends to list
+        kittyClicker.$leaderboard.html('');
+        let userInfo = data.val();
+        kittyClicker.dataArray = [];
+        for (let key in userInfo) {
+            kittyClicker.dataArray.push({hash: key, name: userInfo[key].name, score: userInfo[key].score, identifier: userInfo[key].identifier});
+        }
+        function compare(a, b) {
+            const aa = a.score;
+            const bb = b.score;
+            let comparison = 0;
+            if (aa > bb) {
+                comparison = -1;
+            } else if (aa < bb) {
+                comparison = 1;
+            }
+            return comparison;
+        };
+        kittyClicker.sortedDataArray = kittyClicker.dataArray.sort(compare);
+        //post max 15 results, if less than 15 in db then exit
+        for (let i = 0; i < 16; i++) {
+            if (kittyClicker.sortedDataArray[i] === undefined) {
+                return;
+            } else {
+                kittyClicker.$leaderboard.append(`<li>${kittyClicker.sortedDataArray[i].name}, ${kittyClicker.sortedDataArray[i].score}</li>`);
+            }
+        }
+    });
+}
 
 kittyClicker.listenUp = function() {
     //attach some event listeners
     kittyClicker.$volMute.on('click', kittyClicker.volumeOff);
     kittyClicker.$volOn.on('click', kittyClicker.volumeOn);
+    kittyClicker.$submit.one('click', kittyClicker.submitName);
     kittyClicker.$charSelect.one('click', kittyClicker.assignCharacter);
     kittyClicker.$start.on('click', kittyClicker.runGame);
 } //end of listenUp
+
+kittyClicker.submitName = function(e) {
+    e.preventDefault();
+    kittyClicker.username = $('input#name').val();
+    kittyClicker.useridentifier = $('input#identifier').val();
+    kittyClicker.checkScoreHistory();
+    kittyClicker.$submitModal.hide();
+    kittyClicker.$selectModal.show();
+    kittyClicker.$charSelect[0].focus();
+}
 
 kittyClicker.assignCharacter = function(e) {
     e.preventDefault();
@@ -263,7 +321,7 @@ kittyClicker.resetGame = function() {
 } //end of resetGame method
 
 kittyClicker.setFinalScore = function() {
-    //update the final score
+    //update the final score on DOM
     // NOTE: I would've used .padStart() for this to avoid using if/else but it's not supported on IE :( bad IE
     if (kittyClicker.scoreCounter < 10) {
         kittyClicker.$finalScore.text('0000' + kittyClicker.scoreCounter);
@@ -277,18 +335,35 @@ kittyClicker.setFinalScore = function() {
         kittyClicker.$finalScore.text(kittyClicker.scoreCounter);
     }
 
-    //update localStorage if it's a new top score and update the DOM
-    if (localStorage.length === 0) {
-        localStorage.setItem('previousScore', kittyClicker.scoreCounter);
-        kittyClicker.scoreHistory = localStorage.getItem('previousScore');
-        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
-    } else if (localStorage.length === 1) {
-        if (localStorage.getItem('previousScore') < kittyClicker.scoreCounter) {
-            localStorage.setItem('previousScore', kittyClicker.scoreCounter);
-            kittyClicker.scoreHistory = localStorage.getItem('previousScore');
-            kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    //update database and DOM with score
+    if (kittyClicker.userScore === undefined) {
+        userCollection.push({name: kittyClicker.username, score: kittyClicker.scoreCounter, identifier: kittyClicker.useridentifier});
+        kittyClicker.userScore = kittyClicker.scoreCounter;
+        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.userScore}`);
+        //we need to obtain the generated userHash
+        for (let i = 0; i < kittyClicker.sortedDataArray.length; i++) {
+            if (kittyClicker.sortedDataArray[i].name === kittyClicker.username && kittyClicker.sortedDataArray[i].identifier === kittyClicker.useridentifier) {
+                kittyClicker.userHash = kittyClicker.sortedDataArray[i].hash;
+            }
         }
+    } else if (kittyClicker.userScore < kittyClicker.scoreCounter) {
+        firebase.database().ref(`/users/${kittyClicker.userHash}`).set({score: kittyClicker.scoreCounter});
+        kittyClicker.userScore = kittyClicker.scoreCounter;
+        kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.userScore}`);
     }
+
+    //OLD WAY - update localStorage if it's a new top score and update the DOM
+    // if (localStorage.length === 0) {
+    //     localStorage.setItem('previousScore', kittyClicker.scoreCounter);
+    //     kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+    //     kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    // } else if (localStorage.length === 1) {
+    //     if (localStorage.getItem('previousScore') < kittyClicker.scoreCounter) {
+    //         localStorage.setItem('previousScore', kittyClicker.scoreCounter);
+    //         kittyClicker.scoreHistory = localStorage.getItem('previousScore');
+    //         kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.scoreHistory}`);
+    //     }
+    // }
 } //end of setFinalScore method
 
 kittyClicker.countdownTimer = function() {

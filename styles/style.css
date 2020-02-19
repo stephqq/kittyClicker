@@ -201,7 +201,7 @@ body {
 }
 
 .wrapper {
-  max-width: 400px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -229,7 +229,8 @@ main {
 
 main .startModal,
 main .endModal,
-main .selectModal {
+main .selectModal,
+main .helloModal {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -242,55 +243,34 @@ main .selectModal {
   border-radius: 10px;
 }
 
-main .startModal ul,
-main .endModal ul,
-main .selectModal ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-main .startModal ul li:hover,
-main .startModal ul li:focus,
-main .endModal ul li:hover,
-main .endModal ul li:focus,
-main .selectModal ul li:hover,
-main .selectModal ul li:focus {
-  -webkit-transform: scale(1.2);
-          transform: scale(1.2);
-}
-
 main .startModal img,
 main .endModal img,
-main .selectModal img {
+main .selectModal img,
+main .helloModal img {
   margin-top: 20px;
   width: 100px;
 }
 
 main .startModal .dance,
 main .endModal .dance,
-main .selectModal .dance {
+main .selectModal .dance,
+main .helloModal .dance {
   -webkit-animation: kittyDance 5s infinite;
           animation: kittyDance 5s infinite;
 }
 
 main .startModal .reverse,
 main .endModal .reverse,
-main .selectModal .reverse {
+main .selectModal .reverse,
+main .helloModal .reverse {
   -webkit-animation: kittyDanceReverse 5s infinite;
           animation: kittyDanceReverse 5s infinite;
 }
 
 main .startModal button,
 main .endModal button,
-main .selectModal button {
+main .selectModal button,
+main .helloModal button {
   background: #fcb3c4;
   border: 5px solid transparent;
   padding: 5px 25px;
@@ -304,19 +284,42 @@ main .startModal button:hover, main .startModal button:focus,
 main .endModal button:hover,
 main .endModal button:focus,
 main .selectModal button:hover,
-main .selectModal button:focus {
+main .selectModal button:focus,
+main .helloModal button:hover,
+main .helloModal button:focus {
   border: 5px solid gray;
 }
 
 main .startModal button:active,
 main .endModal button:active,
-main .selectModal button:active {
+main .selectModal button:active,
+main .helloModal button:active {
   -webkit-transform: scale(0.9);
           transform: scale(0.9);
 }
 
+main .selectModal ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+main .selectModal ul li:hover,
+main .selectModal ul li:focus {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+}
+
 main .startModal,
-main .endModal {
+main .endModal,
+main .selectModal {
   display: none;
 }
 
@@ -328,6 +331,28 @@ main .finalScore {
 main .instructions {
   font-size: 1.6rem;
   margin-top: 15px;
+}
+
+main .helloModal input {
+  border: 5px solid #fcecb3;
+  background: #fffae8;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  width: 70%;
+  margin-bottom: 5px;
+}
+
+main .leaderboards {
+  background: #fcb3c4;
+  max-width: 380px;
+  padding: 20px;
+  text-align: right;
+}
+
+main .leaderboards h2 {
+  font-family: "Pacifico", cursive;
+  font-size: 3rem;
 }
 
 span {
@@ -353,8 +378,42 @@ footer a:hover, footer a:focus {
   background: #fcb3c4;
 }
 
+.gameContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+@media (max-width: 620px) {
+  .wrapper {
+    max-width: 400px;
+  }
+  .gameContainer {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .leaderboards {
+    margin-top: 15px;
+    max-width: 400px;
+  }
+}
+
+.leaderboards,
 .gameArea {
   height: 80vh;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.gameArea {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -366,8 +425,9 @@ footer a:hover, footer a:focus {
           align-items: center;
   position: relative;
   background: #fcecb3;
-  border-radius: 10px;
   overflow: hidden;
+  max-width: 400px;
+  min-width: 300px;
 }
 
 .gameArea img {

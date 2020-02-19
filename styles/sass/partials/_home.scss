@@ -17,7 +17,8 @@ main {
 
     .startModal,
     .endModal,
-    .selectModal {
+    .selectModal,
+    .helloModal {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -27,17 +28,6 @@ main {
         background: $modalBackground;
         padding: 30px 0;
         border-radius: 10px;
-
-        ul {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            li:hover,
-            li:focus {
-                transform: scale(1.2);
-            }
-        }
 
         img {
             margin-top: 20px;
@@ -71,8 +61,23 @@ main {
         }
     }
 
+    .selectModal {
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            li:hover,
+            li:focus {
+                transform: scale(1.2);
+            }
+        }
+    }
+
     .startModal,
-    .endModal {
+    .endModal,
+    .selectModal {
         display: none;
     }
 
@@ -84,6 +89,30 @@ main {
     .instructions {
         font-size: 1.6rem;
         margin-top: 15px;
+    }
+
+    .helloModal {
+        input {
+            border: 5px solid $primary;
+            background: $bodyBackground;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            width: 70%;
+            margin-bottom: 5px;
+        }
+    }
+
+    .leaderboards {
+        background: $accent;
+        max-width: 380px;
+        padding: 20px;
+        text-align: right;
+    
+        h2 {
+            font-family: $headerFont;
+            font-size: 3rem;
+        }
     }
 }
 
