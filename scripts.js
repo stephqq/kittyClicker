@@ -387,7 +387,7 @@ kittyClicker.setFinalScore = function() {
             }
         }
     } else if (kittyClicker.userScore < kittyClicker.scoreCounter) {
-        firebase.database().ref(`/users/${kittyClicker.userHash}`).set({score: kittyClicker.scoreCounter});
+        firebase.database().ref(`/users/${kittyClicker.userHash}`).update({score: kittyClicker.scoreCounter});
         kittyClicker.userScore = kittyClicker.scoreCounter;
         kittyClicker.$topScore.html(`Top Score:<span></span> ${kittyClicker.userScore}`);
     }
