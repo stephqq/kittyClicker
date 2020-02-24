@@ -52,6 +52,9 @@ kittyClicker.grabDOMElements = function() {
     kittyClicker.$submit = $('.submitName');
     kittyClicker.$submitModal = $('.helloModal');
     kittyClicker.$leaderboard = $('.leaderboards ul');
+    kittyClicker.$lbScreen = $('.leaderboards');
+    kittyClicker.$openLB = $('.grabArrow');
+    kittyClicker.$openLBScreen = $('aside');
 } //end of grabDOMElements
 
 kittyClicker.checkScoreHistory = function() {
@@ -109,20 +112,57 @@ kittyClicker.listenUp = function() {
     //attach some event listeners
     kittyClicker.$volMute.on('click', kittyClicker.volumeOff);
     kittyClicker.$volOn.on('click', kittyClicker.volumeOn);
-    kittyClicker.$submit.one('click', kittyClicker.submitName);
+    kittyClicker.$submit.on('click', kittyClicker.submitName);
     kittyClicker.$charSelect.one('click', kittyClicker.assignCharacter);
     kittyClicker.$start.on('click', kittyClicker.runGame);
+    kittyClicker.$openLB.on('click', kittyClicker.toggleLB);
+    //dom event listener to address resizing beyond 620px and user has toggled the LB and it's set to display: none so it won't reappear when it should
+    //and vice versa
+    $(window).on('resize', kittyClicker.fixLB);
 } //end of listenUp
+
+kittyClicker.fixLB = function() {
+    if ($(window).outerWidth() > 620) {
+        if (kittyClicker.$lbScreen.css('display') === 'none') {
+            kittyClicker.$lbScreen.css('display', 'block');
+        }
+    } else if ($(window).outerWidth() < 620) {
+        if (kittyClicker.$lbScreen.css('display') === 'block') {
+            kittyClicker.$openLBScreen.show();
+            kittyClicker.$lbScreen.hide();
+        }
+    }
+} //end of fixLB
+
+kittyClicker.toggleLB = function() {
+    //determine if open or closed
+    if (kittyClicker.$lbScreen.css('display') === 'none') {
+        kittyClicker.$openLBScreen.hide();
+        kittyClicker.$lbScreen.show();
+    } else {
+        kittyClicker.$openLBScreen.show();
+        kittyClicker.$lbScreen.hide();
+    }
+} //end of toggleLB
 
 kittyClicker.submitName = function(e) {
     e.preventDefault();
-    kittyClicker.username = $('input#name').val();
-    kittyClicker.useridentifier = $('input#identifier').val();
-    kittyClicker.checkScoreHistory();
-    kittyClicker.$submitModal.hide();
-    kittyClicker.$selectModal.show();
-    kittyClicker.$charSelect[0].focus();
-}
+    const nameValid = /[a-z]{3,6}/;
+    const idValid = /[0-9]{4,4}/;
+    if (nameValid.test($('input#name').val()) && idValid.test($('input#identifier').val())) {
+        kittyClicker.username = $('input#name').val();
+        kittyClicker.useridentifier = $('input#identifier').val();
+        kittyClicker.checkScoreHistory();
+        kittyClicker.$submitModal.hide();
+        kittyClicker.$selectModal.show();
+        kittyClicker.$charSelect[0].focus();
+    } else {
+        swal({
+            icon: 'error',
+            text: 'Please enter both a username and a 4 digit identifier!',
+        });
+    }
+} //end of submitName
 
 kittyClicker.assignCharacter = function(e) {
     e.preventDefault();
@@ -138,7 +178,7 @@ kittyClicker.assignCharacter = function(e) {
     kittyClicker.$selectModal.hide();
     kittyClicker.$startModal.show();
     kittyClicker.$start.focus();
-}
+} //end of assignCharacter
 
 kittyClicker.volumeOff = function() {
     if (!kittyClicker.musicCatalogue.music.muted) {

@@ -6,9 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Kitty Clicker (=^ ◡ ^=)</title>
+    <!-- search metadata -->
+    <meta name="description" content="Click the kitty as fast as you can for 30 seconds - compete on the leaderboards!">
+    <meta name="robots" content="index, nofollow">
+    <meta name="author" content="Stephanie Kerr">
+    <!-- twitter metadata -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@stephqqmore">
+    <meta name="twitter:title" content="Kitty Clicker">
+    <meta name="twitter:description"
+        content="Click the kitty as fast as you can for 30 seconds - compete on the leaderboards!">
+    <meta name="twitter:image" content="https://stephqq.github.io/stephanieKerrProjectThree/assets/kittyState1-1.png">
+    <!-- linkedin and facebook metadata -->
+    <meta property="og:url" content="https://stephqq.github.io/stephanieKerrProjectThree/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kitty Clicker" />
+    <meta property="og:description"
+        content="Click the kitty as fast as you can for 30 seconds - compete on the leaderboards!" />
+    <meta property="og:image" content="https://stephqq.github.io/stephanieKerrProjectThree/assets/kittyState1-1.png" />
+    <!-- favicon -->
     <link type="image/png" href="./assets/favicon.png" rel="icon">
+    <!-- google fonts -->
     <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,700|Indie+Flower|Pacifico&display=swap"
         rel="stylesheet">
+    <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/7e17416451.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./styles/style.css">
 </head>
@@ -86,13 +107,25 @@
                 </div>
                 <!--./gameArea-->
                 <div class="leaderboards">
-                    <h2>Leaderboards</h2>
+                    <div class="leaderboardsContainer">
+                        <i class="fas fa-angle-down grabArrow" tabindex="0"
+                            aria-labelledby="closeLeaderboards"></i><span class="visuallyHidden"
+                            id="closeLeaderboards">close leaderboards</span>
+                        <h2>Leaderboards</h2>
+                    </div>
                     <ul></ul>
                 </div>
                 <!--./leaderboards-->
             </div>
             <!--./gameContainer-->
         </main>
+        <aside>
+            <div class="asideContainer">
+                <i class="fas fa-angle-up grabArrow" tabindex="0" aria-labelledby="showLeaderboards"></i><span
+                    class="visuallyHidden" id="showLeaderboards">show leaderboards</span>
+                <h2>Leaderboards</h2>
+            </div>
+        </aside>
         <footer>
             <p>&copy; <a href="http://stephaniekerr.io">Stephanie Kerr</a> 2020</p>
             <p>Main art by Carlo Redor <i class="fas fa-heart" aria-hidden="true"></i></p>
@@ -120,6 +153,7 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
     </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="./scripts.js"></script>
 </body>
 

@@ -105,7 +105,7 @@ main {
 
     .leaderboards {
         background: $accent;
-        max-width: 380px;
+        width: 380px;
         padding: 20px;
         text-align: right;
     
@@ -136,5 +136,33 @@ footer {
         &:focus {
             background: $accent;
         }
+    }
+}
+
+aside {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 9vh;
+    background: $accent;
+    padding: 0 10%;
+    display: none;
+
+    .asideContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    i {
+        font-size: 5rem;
+    }
+
+    h2 {
+        font-family: $headerFont;
+        font-size: 3rem;
     }
 }

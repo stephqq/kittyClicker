@@ -345,7 +345,7 @@ main .helloModal input {
 
 main .leaderboards {
   background: #fcb3c4;
-  max-width: 380px;
+  width: 380px;
   padding: 20px;
   text-align: right;
 }
@@ -378,6 +378,40 @@ footer a:hover, footer a:focus {
   background: #fcb3c4;
 }
 
+aside {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 9vh;
+  background: #fcb3c4;
+  padding: 0 10%;
+  display: none;
+}
+
+aside .asideContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+aside i {
+  font-size: 5rem;
+}
+
+aside h2 {
+  font-family: "Pacifico", cursive;
+  font-size: 3rem;
+}
+
 .gameContainer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -385,24 +419,37 @@ footer a:hover, footer a:focus {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  position: relative;
 }
 
 @media (max-width: 620px) {
   .wrapper {
     max-width: 400px;
   }
-  .gameContainer {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+  main .leaderboards {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    z-index: 20;
+    height: 100vh;
+    width: 100vw;
+    display: none;
   }
-  .leaderboards {
-    margin-top: 15px;
-    max-width: 400px;
+  main .leaderboards i {
+    display: block;
+  }
+  .leaderboardsContainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  aside {
+    display: block;
   }
 }
 
@@ -411,6 +458,16 @@ footer a:hover, footer a:focus {
   height: 80vh;
   border-radius: 10px;
   width: 100%;
+}
+
+.leaderboardsContainer {
+  text-align: right;
+  width: 100%;
+}
+
+.leaderboardsContainer i {
+  font-size: 5rem;
+  display: none;
 }
 
 .gameArea {
